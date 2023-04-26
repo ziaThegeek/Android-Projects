@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User Details"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:textColor="@color/cardBackGround"
+        android:textStyle="bold"
+        android:textSize="30sp"/>
+        />
+    <EditText
+        android:layout_marginTop="10sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Name"
+        android:drawableLeft="@drawable/user_photo"
+        android:textColor="@color/cardBackGround"
+        android:textSize="15sp"
+        android:id="@+id/name"
+        />
+    <EditText
+        android:layout_marginTop="10sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Father Name"
+        android:drawableLeft="@drawable/user_photo"
+        android:textColor="@color/cardBackGround"
+        android:textSize="15sp"
+        android:id="@+id/fname"
+        />
+    <EditText
+        android:layout_marginTop="10sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="CNIC"
+        android:drawableLeft="@drawable/cnic"
+        android:textColor="@color/cardBackGround"
+        android:textSize="15sp"
+        android:id="@+id/CNIC"
+        android:enabled="false"
+        />
+    <EditText
+        android:layout_marginTop="10sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Contact Number"
+        android:drawableLeft="@drawable/phone"
+        android:textColor="@color/cardBackGround"
+        android:textSize="15sp"
+        android:id="@+id/contact"
+        />
+    <EditText
+        android:layout_marginTop="10sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Designation"
+        android:drawableLeft="@drawable/designation"
+        android:textColor="@color/cardBackGround"
+        android:textSize="15sp"
+        android:id="@+id/designation"
+        />
+    <EditText
+        android:layout_marginTop="10sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="District"
+        android:drawableLeft="@drawable/district"
+        android:textColor="@color/cardBackGround"
+        android:textSize="15sp"
+        android:id="@+id/district"
+        />
+    <EditText
+        android:layout_marginTop="10sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:id="@+id/password"
+        android:drawableLeft="@drawable/password_photo"
+        android:textColor="@color/cardBackGround"
+        android:textSize="15sp"/>
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:layout_margin="15sp"
+        android:drawableRight="@drawable/save"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/cardBackGround"
+        android:id="@+id/save_changes"
+        android:text="Save Changes"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:layout_margin="15sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/red"
+        android:id="@+id/delete_user"
+        android:drawableRight="@drawable/delete"
+        android:text="Delete User"/>
+
+</LinearLayout>

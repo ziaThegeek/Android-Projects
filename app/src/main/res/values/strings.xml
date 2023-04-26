@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">HRIS System</string>
+    <string name="CheckinText">checkin</string>
+    <string name="CheckoutText">checkout</string>
+</resources>
