@@ -41,19 +41,26 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
 
 public class Users extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     List<String> name, fName, CNIC, contact, designation, district,password;
+    List<Boolean> adminUser;
     ListView listView_users;
     usersAdapter usersAdapter;
     private static final int REQUEST_CODE = 10;
@@ -78,6 +85,7 @@ public class Users extends AppCompatActivity {
         designation = new ArrayList<>();
         district = new ArrayList<>();
         password=new ArrayList<>();
+        adminUser=new ArrayList<>();
 
 
         usersAdapter = new usersAdapter(this, name, fName, CNIC, contact, designation, district);
@@ -87,7 +95,7 @@ public class Users extends AppCompatActivity {
         listView_users.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                showEditUserDialog(name.get(i),fName.get(i),CNIC.get(i),contact.get(i),designation.get(i),district.get(i),password.get(i));
+                showEditUserDialog(name.get(i),fName.get(i),CNIC.get(i),contact.get(i),designation.get(i),district.get(i),password.get(i),adminUser.get(i));
                 return true;
             }
         });
@@ -113,6 +121,9 @@ public class Users extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
+
 
     private void importUsers(String filename) throws IOException, BiffException {
 
@@ -241,6 +252,7 @@ public class Users extends AppCompatActivity {
                 designation.clear();
                 district.clear();
                 password.clear();
+                adminUser.clear();
                 for (DataSnapshot dsp : snapshot.getChildren()) {
                     AllUsers user = dsp.getValue(AllUsers.class);
                     name.add(user.name);
@@ -250,6 +262,7 @@ public class Users extends AppCompatActivity {
                     designation.add(user.designation);
                     district.add(user.district);
                     password.add(user.password);
+                    adminUser.add(user.isAdmin);
                 }
                 listView_users.setAdapter(usersAdapter);
 
@@ -320,7 +333,7 @@ public class Users extends AppCompatActivity {
         });
 
     }
-    private void showEditUserDialog(String name,String fName,String CNIC,String contact,String designation,String district,String password)
+    private void showEditUserDialog(String name,String fName,String CNIC,String contact,String designation,String district,String password,boolean adminUser)
     {
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
         bottomSheetDialog.setContentView(R.layout.edit_user_dialog);
@@ -333,6 +346,7 @@ public class Users extends AppCompatActivity {
         EditText districtText=bottomSheetDialog.findViewById(R.id.district);
         EditText passwordText=bottomSheetDialog.findViewById(R.id.password);
 
+        CheckBox isAdmin=bottomSheetDialog.findViewById(R.id.isAdmin);
 
         //----------------------------------------------//
         nameText.setText(name);
@@ -342,6 +356,7 @@ public class Users extends AppCompatActivity {
         designationText.setText(designation);
         districtText.setText(district);
         passwordText.setText(password);
+        isAdmin.setChecked(adminUser);
 
         //----------------------------------------------//
 
@@ -367,7 +382,8 @@ public class Users extends AppCompatActivity {
                         designationText.getText().toString().trim(),
                         contactText.getText().toString().trim(),
                         districtText.getText().toString().trim(),
-                        passwordText.getText().toString().trim()
+                        passwordText.getText().toString().trim(),
+                        isAdmin.isChecked()
                 );
                 bottomSheetDialog.dismiss();
             }
@@ -412,7 +428,7 @@ public class Users extends AppCompatActivity {
         });
     }
 
-    private void updateUserDetails(String CNIC,String name,String fname,String designation,String contact,String district,String password) {
+    private void updateUserDetails(String CNIC,String name,String fname,String designation,String contact,String district,String password,boolean isAdmin) {
         Query query=databaseReference.orderByChild("cnic").equalTo(CNIC);
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -429,6 +445,7 @@ public class Users extends AppCompatActivity {
                        dsp.getRef().child("contact").setValue(contact);
                        dsp.getRef().child("district").setValue(district);
                        dsp.getRef().child("password").setValue(password);
+                       dsp.getRef().child("admin").setValue(isAdmin);
                         Toast.makeText(Users.this, "user "+CNIC +" Updated Successfully", Toast.LENGTH_SHORT).show();
                         break;
                     }

@@ -28,6 +28,7 @@ TextView forgotPassword,viewpass;
 Intent mainActivity;
 Intent adminScreen;
 String password1,name,cnic;
+Boolean isAdmin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,18 +72,19 @@ String password1,name,cnic;
                     Toast.makeText(userLogin.this, "Password must be filled in", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    if (username.getText().toString().trim().equals("Admin HR")  && password.getText().toString().trim().equals("2021-1721/23"))
-                    {
-                        Toast.makeText(userLogin.this, "Admin Login", Toast.LENGTH_SHORT).show();
-
-                        startActivity(adminScreen);
-                    }
-                    else {
+//                    if (username.getText().toString().trim().equals("Admin HR")  && password.getText().toString().trim().equals("2021-1721/23"))
+//                    {
+//                        Toast.makeText(userLogin.this, "Admin Login", Toast.LENGTH_SHORT).show();
+//
+//
+//                    }
+//                    else {
 
                         Query query=databaseReference.orderByChild("cnic").equalTo(username.getText().toString().trim());
                         password1="";
                         cnic="";
                         name="";
+                        isAdmin=false;
 
                         query.addValueEventListener(new ValueEventListener() {
                             @Override
@@ -93,16 +95,25 @@ String password1,name,cnic;
                                     if (password1.equals(password.getText().toString().trim()))
                                     {
                                         name=user.getName();
-                                        cnic=user.getCnic();
+                                        isAdmin=user.isAdmin();
+                                        cnic=username.getText().toString().trim();
                                         break;
                                     }
                                 }
                                     
                                     if (password1.equals(password.getText().toString().trim()))
                                     {
-                                        mainActivity.putExtra("username", name);
-                                        mainActivity.putExtra("cnic", cnic);
-                                        startActivity(mainActivity);
+                                        if (isAdmin)
+                                        {
+                                            Toast.makeText(userLogin.this, "Admin Login", Toast.LENGTH_SHORT).show();
+                                            startActivity(adminScreen);
+                                        }
+                                        else
+                                        {
+                                            mainActivity.putExtra("username", name);
+                                            mainActivity.putExtra("cnic", cnic);
+                                            startActivity(mainActivity);
+                                        }
                                     }
                                     else
                                     {
@@ -120,7 +131,7 @@ String password1,name,cnic;
 
 
                        
-                    }
+
                 }
             }
         });
