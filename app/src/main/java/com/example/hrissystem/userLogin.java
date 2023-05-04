@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -105,8 +106,10 @@ Boolean isAdmin;
                                     {
                                         if (isAdmin)
                                         {
+
                                             Toast.makeText(userLogin.this, "Admin Login", Toast.LENGTH_SHORT).show();
                                             startActivity(adminScreen);
+
                                         }
                                         else
                                         {

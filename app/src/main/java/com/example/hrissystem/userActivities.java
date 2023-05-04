@@ -1,11 +1,15 @@
 package com.example.hrissystem;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -16,7 +20,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +32,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
@@ -64,6 +72,26 @@ public class userActivities extends AppCompatActivity {
             case R.id.export_to_excel:
                 export2Excel();
                 return  true;
+            case R.id.delete_entries:
+                //TODO to be implemented
+                return true;
+            case R.id.searchView:
+                SearchView searchView = (SearchView) item.getActionView();
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        // Perform search operation here
+
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        // Update search results here
+                        return true;
+                    }
+                });
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -175,7 +203,7 @@ public class userActivities extends AppCompatActivity {
         bottomSheetDialog.show();
         TextView nameText=bottomSheetDialog.findViewById(R.id.name);
         TextView CNICText=bottomSheetDialog.findViewById(R.id.CNIC);
-        TextView dateText=bottomSheetDialog.findViewById(R.id.date);
+        EditText dateText=bottomSheetDialog.findViewById(R.id.date);
 
         nameText.setText(name);
         CNICText.setText(CNIC);
@@ -184,8 +212,29 @@ public class userActivities extends AppCompatActivity {
         Button checkInLocation=bottomSheetDialog.findViewById(R.id.checkin_location);
         Button checkOutLocation=bottomSheetDialog.findViewById(R.id.checkout_location);
         Button close=bottomSheetDialog.findViewById(R.id.close);
+        Button updateEntry=bottomSheetDialog.findViewById(R.id.save_changes);
+        Button deleteEntry=bottomSheetDialog.findViewById(R.id.deleteEntry);
 
+dateText.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(userActivities.this,
+                new DatePickerDialog.OnDateSetListener() {
 
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+
+                        dateText.setText(String.format("%02d",dayOfMonth) + "-" + String.format("%02d",monthOfYear+1) + "-" + String.format("%04d",year));
+
+                    }
+                }, Integer.parseInt(dateText.getText().toString().substring(6)),
+                Integer.parseInt(dateText.getText().toString().substring(3,5))-1,
+                Integer.parseInt(dateText.getText().toString().substring(0,2)));
+
+        datePickerDialog.show();
+    }
+});
 
         checkInLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,12 +242,13 @@ public class userActivities extends AppCompatActivity {
                 //TODO open Map for check in
                 if (checkinLatitude!=0.0 && checkinlogitude!=0.0)
                 {
-                    String uri = String.format(Locale.ENGLISH, "geo:%f,%f", checkinLatitude, checkinlogitude);
+                    String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%f,%f (%s)", checkinLatitude, checkinlogitude, nameText.getText().toString());
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                     startActivity(intent);
                 }
                 else
                 {
+
                     Toast.makeText(userActivities.this, "Wrong Coordinates", Toast.LENGTH_SHORT).show();
 
                 }
@@ -211,7 +261,7 @@ public class userActivities extends AppCompatActivity {
                 //TODO open Map for check out
                 if (checkoutLatitude!=0.0 && checkoutlongitude!=0.0)
                 {
-                    String uri = String.format(Locale.ENGLISH, "geo:%f,%f", checkoutLatitude, checkoutlongitude);
+                    String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%f,%f (%s)", checkoutLatitude, checkoutlongitude, nameText.getText().toString());
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                     startActivity(intent);
                 }
@@ -227,7 +277,49 @@ public class userActivities extends AppCompatActivity {
                 bottomSheetDialog.dismiss();
             }
         });
+        updateEntry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateEntry(CNIC,date,dateText.getText().toString().trim());
+                Toast.makeText(userActivities.this, "Updated Successfully", Toast.LENGTH_SHORT).show();
+            }
+        });
 
+        deleteEntry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog alertDialog = new AlertDialog.Builder(userActivities.this)
+//set icon
+                        .setIcon(android.R.drawable.ic_delete)
+
+//set title
+                        .setTitle("Delete Entry")
+//set message
+                        .setMessage("Entry Will be Deleted Permanently")
+//set positive button
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //set what would happen when positive button is clicked
+                                //TODO Delete User
+                                deleteEntry(CNIC,date);
+                                bottomSheetDialog.dismiss();
+                                Toast.makeText(userActivities.this,"Entry Deleted",Toast.LENGTH_LONG).show();
+                            }
+                        })
+//set negative button
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //set what should happen when negative button is clicked
+
+                            }
+                        })
+                        .show();
+
+                deleteEntry(CNIC,date);
+            }
+        });
     }
     private void export2Excel() {
         String permission= Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -308,4 +400,54 @@ public class userActivities extends AppCompatActivity {
         }
 
     }
+    public void updateEntry(String CNIC,String date,String newDate)
+    {
+        Query query=databaseReference.orderByChild("cnic").equalTo(CNIC);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dsp : snapshot.getChildren()) {
+                userEntry userEntry=dsp.getValue(userEntry.class);
+                if (CNIC.equals(userEntry.getCnic()) && date.equals(userEntry.getDate()))
+                    dsp.getRef().child("date").setValue(newDate);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    public void deleteEntry(String CNIC,String date)
+    {
+        Query query=databaseReference.orderByChild("cnic").equalTo(CNIC);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dsp : snapshot.getChildren()) {
+                    userEntry userEntry=dsp.getValue(com.example.hrissystem.userEntry.class);
+                    if (CNIC.equals(userEntry.getCnic()) && date.equals(userEntry.getDate()))
+                        dsp.getRef().removeValue(new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                if (error != null) {
+                                    // Handle errors
+                                    Toast.makeText(userActivities.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    // Value deleted successfully
+                                    System.out.println("User deleted successfully.");
+                                }
+                            }
+                        });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 }

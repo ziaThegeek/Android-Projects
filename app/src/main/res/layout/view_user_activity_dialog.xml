@@ -83,7 +83,7 @@
             android:textStyle="bold"
             android:textSize="17sp"/>
 
-        <TextView
+        <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
 
@@ -91,7 +91,6 @@
             android:gravity="center_horizontal"
             android:textColor="@color/black"
             android:id="@+id/date"
-
             android:textSize="17sp"/>
 
     </LinearLayout>
@@ -116,6 +115,31 @@
         android:id="@+id/checkout_location"
         android:drawableRight="@drawable/location"
         android:text="checkout location"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_margin="15sp"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/cardBackGround"
+            android:drawableRight="@drawable/save"
+            android:id="@+id/save_changes"
+
+            android:text="Save Changes"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_margin="15sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/red"
+        android:drawableRight="@drawable/delete"
+        android:id="@+id/deleteEntry"
+        android:text="Delete Entry"/>
+
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
