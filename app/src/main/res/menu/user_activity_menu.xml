@@ -2,17 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/searchView"
-        android:icon="@drawable/search_white"
-        app:showAsAction="always"
-        app:actionViewClass="android.widget.SearchView"
-        android:title="Search">
+<!--    <item android:id="@+id/searchView"-->
+<!--        android:icon="@drawable/search_white"-->
+<!--        app:showAsAction="always"-->
+<!--        app:actionViewClass="android.widget.SearchView"-->
+<!--        android:title="Search">-->
 
-    </item>
+<!--    </item>-->
     <item
     android:title="Download in Excel"
     android:id="@+id/export_to_excel"
-   /><item
+   />
+    <item
     android:title="Delete Entries"
     android:id="@+id/delete_entries"
    />

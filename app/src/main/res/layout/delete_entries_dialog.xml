@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10sp"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="From Date"
+            android:textStyle="bold"
+            android:textColor="@color/cardBackGround"
+            android:layout_alignParentLeft="true"
+            android:id="@+id/from_date_title"
+           android:layout_alignBaseline="@id/select_fromDate_btn"
+            android:textSize="12sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00-00-0000"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:id="@+id/from_date"
+            android:layout_alignBaseline="@id/select_fromDate_btn"
+            android:layout_toRightOf="@id/from_date_title"
+            android:layout_toLeftOf="@id/select_fromDate_btn"
+
+            android:textSize="12sp"/>
+        <Button
+            android:layout_width="70sp"
+            android:layout_height="40sp"
+           android:layout_alignParentRight="true"
+            android:id="@+id/select_fromDate_btn"
+            android:textSize="12sp"
+            android:text="Date"/>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10sp"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="To Date"
+            android:textColor="@color/cardBackGround"
+            android:layout_alignParentLeft="true"
+            android:id="@+id/to_date_title"
+            android:textStyle="bold"
+            android:layout_alignBaseline="@id/select_todate_btn"
+            android:textSize="12sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00-00-0000"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:id="@+id/to_date"
+            android:layout_alignBaseline="@id/select_todate_btn"
+            android:layout_toRightOf="@id/to_date_title"
+            android:layout_toLeftOf="@id/select_todate_btn"
+
+            android:textSize="12sp"/>
+        <Button
+            android:layout_width="70sp"
+            android:layout_height="40sp"
+            android:layout_alignParentRight="true"
+            android:id="@+id/select_todate_btn"
+            android:textSize="12sp"
+
+            android:text="Date"/>
+
+    </RelativeLayout>
+</LinearLayout>

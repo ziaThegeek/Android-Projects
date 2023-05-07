@@ -12,6 +12,7 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -34,6 +35,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -73,29 +76,80 @@ public class userActivities extends AppCompatActivity {
                 export2Excel();
                 return  true;
             case R.id.delete_entries:
-                //TODO to be implemented
-                return true;
-            case R.id.searchView:
-                SearchView searchView = (SearchView) item.getActionView();
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                TextView fromDateText,toDateText;
+                Button   fromDateBtn,toDateBtn;
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                View dialogView = getLayoutInflater().inflate(R.layout.delete_entries_dialog, null);
+                fromDateText=dialogView.findViewById(R.id.from_date);
+                toDateText=dialogView.findViewById(R.id.to_date);
+                fromDateBtn=dialogView.findViewById(R.id.select_fromDate_btn);
+                toDateBtn=dialogView.findViewById(R.id.select_todate_btn);
+                fromDateText.setText(getCurrentDate());
+                toDateText.setText(getCurrentDate());
+                fromDateBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        // Perform search operation here
-
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        // Update search results here
-                        return true;
+                    public void onClick(View view) {
+                        setDateFromDialog(fromDateText);
                     }
                 });
+                toDateBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        setDateFromDialog(toDateText);
+                    }
+                });
+
+                builder.setView(dialogView);
+                builder.setTitle("Delete Entries");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Handle the button click
+                        deleteEntries deleteEntries=new deleteEntries(userActivities.this);
+                        deleteEntries.execute(fromDateText.getText().toString().trim(),
+                                toDateText.getText().toString().trim());
+
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Handle the button click
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+
+
                 return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private void setDateFromDialog(TextView textView) {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(userActivities.this,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+
+                        textView.setText(String.format("%02d",dayOfMonth) + "-" + String.format("%02d",monthOfYear+1) + "-" + String.format("%04d",year));
+
+                    }
+                }, getYear(textView.getText().toString().trim()),
+                getMonth(textView.getText().toString().trim()),
+                getDay(textView.getText().toString())
+
+                );
+
+        datePickerDialog.show();
+
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -449,5 +503,23 @@ dateText.setOnClickListener(new View.OnClickListener() {
             }
         });
     }
+    public String getCurrentDate() {
+
+
+        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new java.util.Date());
+        return currentDate;
+    }
+    private Integer getDay(String date)
+    {
+        return Integer.parseInt(date.substring(0,2));
+    }
+    private Integer getMonth(String date)
+    {
+      return   Integer.parseInt(date.substring(3,5))-1;
+    } private Integer getYear(String date)
+    {
+       return Integer.parseInt(date.substring(6));
+    }
+
 
 }
