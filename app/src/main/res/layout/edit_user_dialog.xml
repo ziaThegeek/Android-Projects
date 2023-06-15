@@ -96,6 +96,8 @@
         />
 
 
+
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -106,6 +108,16 @@
         android:backgroundTint="@color/cardBackGround"
         android:id="@+id/save_changes"
         android:text="Save Changes"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:layout_margin="15sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/cardBackGround"
+        android:id="@+id/view_history"
+        android:drawableRight="@drawable/download_white"
+        android:text="View Activity"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

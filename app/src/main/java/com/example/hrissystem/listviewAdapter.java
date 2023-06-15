@@ -1,6 +1,7 @@
 package com.example.hrissystem;
 
 import android.app.Activity;
+import android.opengl.Visibility;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,15 @@ public class listviewAdapter extends ArrayAdapter implements Filterable {
         this.currentDate = currentDate;
         this.name=name;
     }
+public listviewAdapter(Activity context,List<String> checkinTime, List<String> checkoutTime, List<String> currentDate) {
+        super(context,0,checkinTime);
+        this.context=context;
+        this.checkinTime = checkinTime;
+        this.checkoutTime = checkoutTime;
+        this.currentDate = currentDate;
+
+
+    }
 
     @NonNull
     @Override
@@ -47,7 +57,15 @@ public class listviewAdapter extends ArrayAdapter implements Filterable {
         checkinTimeText.setText(checkinTime.get(position));
         checkoutTimeText.setText(checkoutTime.get(position));
         currentDateText.setText(currentDate.get(position));
-        username.setText(name.get(position));
+        if (name!=null) {
+            username.setText(name.get(position));
+            username.setVisibility(View.VISIBLE);
+
+        }
+        else
+        {
+            username.setVisibility(View.GONE);
+        }
 
         return convertView;
     }

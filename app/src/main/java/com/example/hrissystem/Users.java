@@ -55,6 +55,7 @@ import jxl.read.biff.BiffException;
 import jxl.write.Label;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
 
 public class Users extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
@@ -64,8 +65,9 @@ public class Users extends AppCompatActivity {
     ListView listView_users;
     usersAdapter usersAdapter;
     private static final int REQUEST_CODE = 10;
-    private static final int REQUST_PERMISSION_CODE = 11;
+    private static final int REQUST_PERMISSION_CODE = 11,REQUST_PERMISSION_CODE_EXCEL=12;
     boolean isDuplicate;
+    List<userEntry> userEntries;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +88,7 @@ public class Users extends AppCompatActivity {
         district = new ArrayList<>();
         password=new ArrayList<>();
         adminUser=new ArrayList<>();
+        userEntries=new ArrayList<>();
 
 
         usersAdapter = new usersAdapter(this, name, fName, CNIC, contact, designation, district);
@@ -289,6 +292,7 @@ public class Users extends AppCompatActivity {
         TextView passwordText=bottomSheetDialog.findViewById(R.id.password);
 
 
+
         Button add_usr=bottomSheetDialog.findViewById(R.id.add_user);
         add_usr.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -333,7 +337,15 @@ public class Users extends AppCompatActivity {
         });
 
     }
-    private void showEditUserDialog(String name,String fName,String CNIC,String contact,String designation,String district,String password,boolean adminUser)
+    private void showEditUserDialog(
+            String name,
+            String fName,
+            String CNIC,
+            String contact,
+            String designation,
+            String district,
+            String password,
+            boolean adminUser)
     {
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
         bottomSheetDialog.setContentView(R.layout.edit_user_dialog);
@@ -345,7 +357,7 @@ public class Users extends AppCompatActivity {
         EditText designationText=bottomSheetDialog.findViewById(R.id.designation);
         EditText districtText=bottomSheetDialog.findViewById(R.id.district);
         EditText passwordText=bottomSheetDialog.findViewById(R.id.password);
-
+        Button   exportActivity=bottomSheetDialog.findViewById(R.id.view_history);
         CheckBox isAdmin=bottomSheetDialog.findViewById(R.id.isAdmin);
 
         //----------------------------------------------//
@@ -413,7 +425,7 @@ public class Users extends AppCompatActivity {
                                 Toast.makeText(Users.this,"User Deleted",Toast.LENGTH_LONG).show();
                             }
                         })
-//set negative button
+                        //set negative button
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -426,7 +438,20 @@ public class Users extends AppCompatActivity {
 
             }
         });
+       exportActivity.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               Intent userHistory=new Intent(Users.this,viewHistory.class);
+               userHistory.putExtra("username",name);
+               userHistory.putExtra("cnic",CNIC);
+               startActivity(userHistory);
+           }
+       });
+
+
     }
+
+
 
     private void updateUserDetails(String CNIC,String name,String fname,String designation,String contact,String district,String password,boolean isAdmin) {
         Query query=databaseReference.orderByChild("cnic").equalTo(CNIC);
@@ -457,6 +482,7 @@ public class Users extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(Users.this, "Operation Cancelled", Toast.LENGTH_SHORT).show();
 
             }
         });

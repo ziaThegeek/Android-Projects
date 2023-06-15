@@ -7,12 +7,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Icon;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -24,7 +25,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,12 +36,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
+
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import jxl.Workbook;
@@ -49,6 +50,7 @@ import jxl.WorkbookSettings;
 import jxl.write.Label;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
+import kotlin.jvm.Throws;
 
 public class userActivities extends AppCompatActivity {
     listviewAdapter listviewAdapter;
@@ -68,6 +70,7 @@ public class userActivities extends AppCompatActivity {
         return true;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId())
@@ -77,13 +80,14 @@ public class userActivities extends AppCompatActivity {
                 return  true;
             case R.id.delete_entries:
                 TextView fromDateText,toDateText;
-                Button   fromDateBtn,toDateBtn;
+                Button   fromDateBtn,toDateBtn,delete_OK;
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 View dialogView = getLayoutInflater().inflate(R.layout.delete_entries_dialog, null);
                 fromDateText=dialogView.findViewById(R.id.from_date);
                 toDateText=dialogView.findViewById(R.id.to_date);
                 fromDateBtn=dialogView.findViewById(R.id.select_fromDate_btn);
                 toDateBtn=dialogView.findViewById(R.id.select_todate_btn);
+                delete_OK=dialogView.findViewById(R.id.delete_ok);
                 fromDateText.setText(getCurrentDate());
                 toDateText.setText(getCurrentDate());
                 fromDateBtn.setOnClickListener(new View.OnClickListener() {
@@ -99,26 +103,47 @@ public class userActivities extends AppCompatActivity {
                     }
                 });
 
+
                 builder.setView(dialogView);
                 builder.setTitle("Delete Entries");
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Handle the button click
-                        deleteEntries deleteEntries=new deleteEntries(userActivities.this);
-                        deleteEntries.execute(fromDateText.getText().toString().trim(),
-                                toDateText.getText().toString().trim());
-
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Handle the button click
-                    }
-                });
                 AlertDialog dialog = builder.create();
                 dialog.show();
+                delete_OK.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (!date.contains(fromDateText.getText().toString()))
+                        {
+                            fromDateText.setError("this date does not exist in database");
+                        }
+                        else if (!date.contains(toDateText.getText().toString()))
+                        {
+                            toDateText.setError("this date does not exist in database");
+                        }
+                        else {
+                            int fromIndex=date.indexOf(fromDateText.getText().toString());
+                            int toIndex=date.indexOf(toDateText.getText().toString());
+                            if (fromIndex>toIndex)
+                            {
+                                fromDateText.setError("From date should be less than To date");
+                            }
+                            else
+                            {
+                                List<String> dateRange=new ArrayList<>();
+                                for (int i=fromIndex;i<=toIndex;i++)
+                                {
+                                    if (!dateRange.contains(date.get(i)));
+                                    dateRange.add(date.get(i));
+                                }
+                                // delete entries
+                                deleteEntries deleteEntries=new deleteEntries(userActivities.this);
+                                deleteEntries.execute(dateRange);
+                                dialog.dismiss();
+                            }
+                        }
+                    }
+                });
+
+
 
 
 
@@ -137,7 +162,7 @@ public class userActivities extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
 
-                        textView.setText(String.format("%02d",dayOfMonth) + "-" + String.format("%02d",monthOfYear+1) + "-" + String.format("%04d",year));
+                        textView.setText(String.format(Locale.ENGLISH,"%s%s%s%s%s",String.format(Locale.ENGLISH,"%02d",dayOfMonth) , "-" , String.format(Locale.ENGLISH,"%02d",monthOfYear+1) , "-" , String.format(Locale.ENGLISH,"%04d",year)));
 
                     }
                 }, getYear(textView.getText().toString().trim()),
@@ -244,6 +269,7 @@ public class userActivities extends AppCompatActivity {
             }
         });
     }
+
     private void showUserActivityDialoge(String name ,String CNIC,String date,
                                          Double checkinLatitude,
                                          Double checkinlogitude,
@@ -259,9 +285,11 @@ public class userActivities extends AppCompatActivity {
         TextView CNICText=bottomSheetDialog.findViewById(R.id.CNIC);
         EditText dateText=bottomSheetDialog.findViewById(R.id.date);
 
-        nameText.setText(name);
-        CNICText.setText(CNIC);
-        dateText.setText(date);
+            nameText.setText(name);
+            CNICText.setText(CNIC);
+            dateText.setText(date);
+
+
 
         Button checkInLocation=bottomSheetDialog.findViewById(R.id.checkin_location);
         Button checkOutLocation=bottomSheetDialog.findViewById(R.id.checkout_location);
@@ -371,7 +399,7 @@ dateText.setOnClickListener(new View.OnClickListener() {
                         })
                         .show();
 
-                deleteEntry(CNIC,date);
+
             }
         });
     }
@@ -444,7 +472,7 @@ dateText.setOnClickListener(new View.OnClickListener() {
                 // close workbook
                 workbook.write();
                 workbook.close();
-                Toast.makeText(this, "File Saved in"+directory, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "File Saved in "+directory, Toast.LENGTH_SHORT).show();
 
 
 
@@ -490,7 +518,7 @@ dateText.setOnClickListener(new View.OnClickListener() {
                                     Toast.makeText(userActivities.this, error.getMessage(), Toast.LENGTH_SHORT).show();
                                 } else {
                                     // Value deleted successfully
-                                    System.out.println("User deleted successfully.");
+                                    System.out.println("Entry deleted successfully.");
                                 }
                             }
                         });
@@ -506,7 +534,8 @@ dateText.setOnClickListener(new View.OnClickListener() {
     public String getCurrentDate() {
 
 
-        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new java.util.Date());
+        String currentDate;
+        currentDate= new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new java.util.Date());
         return currentDate;
     }
     private Integer getDay(String date)
@@ -521,5 +550,6 @@ dateText.setOnClickListener(new View.OnClickListener() {
        return Integer.parseInt(date.substring(6));
     }
 
+    }
 
-}
+

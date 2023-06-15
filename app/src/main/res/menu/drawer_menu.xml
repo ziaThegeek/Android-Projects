@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<group
+    android:id="@+id/user_group"
+
+    >
+    <item
+        android:id="@+id/username"
+        android:title="Zia Ur Rahman"/>
+</group>
+    <group
+        android:id="@+id/user_details_group">
+        <item
+            android:id="@+id/details"
+            android:title="View Details"/>
+        <item
+            android:id="@+id/logout"
+            android:title="Logout"/>
+        <item
+            android:id="@+id/leave_apply"
+            android:title="Apply for Leave"/>
+    </group>
+</menu>

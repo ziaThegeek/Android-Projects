@@ -16,12 +16,13 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class deleteEntries extends AsyncTask<String,Void,String> {
+public class deleteEntries extends AsyncTask<List<String>,Void,String> {
     Activity context;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
-    String fromDate,toDate;
+    List<String> dateRange;
     private ProgressDialog mProgressDialog;
 
     public deleteEntries(Activity context)
@@ -43,39 +44,40 @@ public class deleteEntries extends AsyncTask<String,Void,String> {
         mProgressDialog.show();
     }
     @Override
-    protected String doInBackground(String... params) {
-        fromDate=params[0];
-        toDate=params[1];
-        Query query=databaseReference.orderByChild("date").equalTo(fromDate);
+    protected String doInBackground(List<String>... params) {
+        dateRange=params[0];
+        for (int i=0;i<dateRange.size();i++) {
+            Query query = databaseReference.orderByChild("date").equalTo(dateRange.get(i));
 
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dsp : snapshot.getChildren()) {
-                    userEntry userEntry=dsp.getValue(com.example.hrissystem.userEntry.class);
-                    if (userEntry.getDate()==fromDate||userEntry.getDate()==toDate)
-                        dsp.getRef().removeValue(new DatabaseReference.CompletionListener() {
-                            @Override
-                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                if (error != null) {
-                                    // Handle errors
-                                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
-                                } else {
-                                    // Value deleted successfully
+            query.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot dsp : snapshot.getChildren()) {
+                        userEntry usrEntry = dsp.getValue(userEntry.class);
+                        if (dateRange.contains(usrEntry.getDate()))
+                            dsp.getRef().removeValue(new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                    if (error != null) {
+                                        // Handle errors
+                                        Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        // Value deleted successfully
 
+                                    }
                                 }
-                            }
-                        });
+                            });
+                    }
+
                 }
 
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        return "Deleted Entries From "+fromDate+" To "+toDate+" Successfully";
+                }
+            });
+        }
+        return "Deleted Entries Successfully";
     }
 
     @Override

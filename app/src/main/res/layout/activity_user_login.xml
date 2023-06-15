@@ -28,7 +28,7 @@
                 android:hint="username"
                 android:textSize="20sp"
                 android:textColor="@color/cardBackGround"
-              android:id="@+id/username"
+                android:id="@+id/username"
                 android:drawableLeft="@drawable/user_photo"
                 android:layout_marginTop="30sp"
                 />
@@ -40,6 +40,7 @@
                 android:layout_height="wrap_content"
                 android:hint="password"
                 android:textSize="20sp"
+
                 android:id="@+id/password"
                 android:textColor="@color/cardBackGround"
                 android:layout_marginTop="30sp"
@@ -72,16 +73,7 @@
                     />
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="forgot password"
-                android:textColor="@color/cardBackGround"
-                android:gravity="right"
 
-                android:id="@+id/forgotPassword"
-                android:layout_gravity="right"
-                />
         </LinearLayout>
 
     </ScrollView>

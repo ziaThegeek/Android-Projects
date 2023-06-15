@@ -6,8 +6,10 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -20,6 +22,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HRISSystem"
         tools:targetApi="31">
+
+        <activity
+            android:name=".Web_View_Faisal"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="leaveApplications.leave_applications"
+            android:exported="false" />
+        <activity
+            android:name=".viewHistory"
+            android:exported="false" />
         <activity
             android:name=".userActivities"
             android:exported="false" />
@@ -28,15 +46,11 @@
             android:exported="false" />
         <activity
             android:name=".Users"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".userLogin"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:exported="false">
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"

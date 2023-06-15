@@ -1,5 +1,25 @@
 <resources>
-    <string name="app_name">HRIS System</string>
+    <string name="app_name">Smart Stich</string>
     <string name="CheckinText">checkin</string>
     <string name="CheckoutText">checkout</string>
+    <string name="Employee_logcat">Logcat</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+    <string-array name="leave_types">
+        <item>None</item>
+        <item>Sick Leave</item>
+        <item>Casual Leave</item>
+        <item>Compensatory Off</item>
+        <item>Marriage Leave</item>
+        <item>Paternity Leave</item>
+        <item>Maternity Leave</item>
+    </string-array>
+
+    <string-array name="approval_status">
+        <item>Draft</item>
+        <item>Not Approved</item>
+        <item>Approved</item>
+    </string-array>
+
+
 </resources>

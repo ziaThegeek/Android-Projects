@@ -1,11 +1,16 @@
 package com.example.hrissystem;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -14,9 +19,16 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,10 +52,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+import leaveApplications.LeaveApplication;
+
 public class MainActivity extends AppCompatActivity {
 String currentTime;
 String currentDate;
-String username,cnic;
+String username,cnic,CNIC;
 Intent loginData;
 
 Location lastLocation;
@@ -57,6 +71,9 @@ DatabaseReference databaseReference;
 ArrayList<String> checkinTime,checkoutTime,date,name,userKey;
 listviewAdapter listviewAdapter;
 ListView listView;
+    ArrayAdapter<CharSequence> leave_types;
+DrawerLayout drawerLayout;
+ActionBarDrawerToggle actionBarDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +87,8 @@ ListView listView;
         usernameText=findViewById(R.id.username);
         listView=findViewById(R.id.listview);
 
+
+
         //-----------------------------------------//
         currentDate = getCurrentDate();
         currentTime = getCurrentTime();
@@ -78,7 +97,11 @@ ListView listView;
         date=new ArrayList<>();
         name=new ArrayList<>();
         userKey=new ArrayList<>();
-        listviewAdapter=new listviewAdapter(this,checkinTime,checkoutTime,date,name);
+        listviewAdapter=new listviewAdapter(this,checkinTime,checkoutTime,date);
+
+        leave_types = ArrayAdapter.createFromResource(this,
+                R.array.leave_types, android.R.layout.simple_spinner_item);
+        leave_types.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         loginData=getIntent();
         username=loginData.getStringExtra("username");
         cnic=loginData.getStringExtra("cnic");
@@ -154,6 +177,112 @@ ListView listView;
         currentTimeText.setText(getCurrentTime());
         currentDateText.setText(getCurrentDate());
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.user_actions_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId())
+        {
+            case R.id.leave_apply:
+                showLeaveApplicationDialog();
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+    private void showLeaveApplicationDialog() {
+        EditText fromDateText,toDateText,reasonText;
+        Spinner leave_type;
+        Button apply_leave;
+        AlertDialog.Builder customDialog=new AlertDialog.Builder(this);
+        View dialogView=getLayoutInflater().inflate(R.layout.leave_appliction_dialog,null);
+        //--------------------------------------------------//
+        fromDateText=dialogView.findViewById(R.id.from_date);
+        toDateText=dialogView.findViewById(R.id.to_date);
+        reasonText=dialogView.findViewById(R.id.reason);
+        apply_leave=dialogView.findViewById(R.id.apply_leave);
+        leave_type=dialogView.findViewById(R.id.leave_type);
+        //-----------------------------------------------------//
+
+        //----------------------------------------------------//
+        fromDateText.setText(getCurrentDate());
+        toDateText.setText(getCurrentDate());
+        leave_type.setAdapter(leave_types);
+        //----------------------------------------------------//
+
+        customDialog.setView(dialogView);
+        customDialog.setTitle("Leave Application");
+
+
+
+        AlertDialog dialog = customDialog.create();
+        dialog.show();
+        apply_leave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (reasonText.getText().toString().trim().isEmpty())
+                {
+                    Toast.makeText(MainActivity.this, "Reason Is Required", Toast.LENGTH_SHORT).show();
+                }
+                else if (fromDateText.getText().toString().trim().isEmpty())
+                {
+                    Toast.makeText(MainActivity.this, "Reason Is Required", Toast.LENGTH_SHORT).show();
+                }
+                else if (toDateText.getText().toString().trim().isEmpty())
+                {
+                    Toast.makeText(MainActivity.this, "Reason Is Required", Toast.LENGTH_SHORT).show();
+                }
+                else if (leave_type.getSelectedItemPosition()==0) {
+                    Toast.makeText(MainActivity.this, "Leave Type Is Required", Toast.LENGTH_SHORT).show();
+
+
+                }
+                else
+                {
+                    applyApplication(username,cnic,fromDateText.getText().toString(),toDateText.getText().toString(),leave_type.getSelectedItem().toString(),reasonText.getText().toString());
+                    dialog.dismiss();
+                    Toast.makeText(MainActivity.this, "Leave Applied", Toast.LENGTH_SHORT).show();
+
+
+
+                }
+
+            }
+        });
+
+        fromDateText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setDateFromDialog(fromDateText);
+            }
+        });
+        toDateText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setDateFromDialog(toDateText);
+            }
+        });
+
+
+
+
+
+    }
+
+    private void applyApplication(String name,String cnic,String fromDate,String toDate,String leave_type,String reson) {
+        DatabaseReference applicationReference=FirebaseDatabase.getInstance().getReference("leaves");
+        LeaveApplication application=new LeaveApplication(name,cnic,fromDate,toDate,leave_type,reson,getCurrentDate());
+        applicationReference.push().setValue(application);
+    }
+
 
     public String getCurrentTime() {
 
@@ -266,6 +395,7 @@ ListView listView;
 
 public void loadDate()
 {
+    CNIC="";
     databaseReference.addValueEventListener(new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -279,11 +409,12 @@ public void loadDate()
             for (DataSnapshot dsp:snapshot.getChildren())
             {
                 userEntry newUser=dsp.getValue(userEntry.class);
-                if (newUser.name.equals(username)) {
+                CNIC= newUser.getCnic();
+                if (CNIC.equals(cnic)) {
                     checkinTime.add(newUser.checkinTime);
                     checkoutTime.add(newUser.checkOutTime);
                     date.add(newUser.date);
-                    name.add(newUser.name);
+
                     userKey.add(dsp.getKey());
                 }
             }
@@ -301,7 +432,38 @@ public void loadDate()
 }
 
 
+    private void setDateFromDialog(TextView textView) {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this,
+                new DatePickerDialog.OnDateSetListener() {
 
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+
+                        textView.setText(String.format(Locale.ENGLISH,"%s%s%s%s%s",String.format(Locale.ENGLISH,"%02d",dayOfMonth) , "-" , String.format(Locale.ENGLISH,"%02d",monthOfYear+1) , "-" , String.format(Locale.ENGLISH,"%04d",year)));
+
+                    }
+                }, getYear(textView.getText().toString().trim()),
+                getMonth(textView.getText().toString().trim()),
+                getDay(textView.getText().toString())
+
+        );
+
+        datePickerDialog.show();
+
+    }
+
+    private Integer getDay(String date)
+    {
+        return Integer.parseInt(date.substring(0,2));
+    }
+    private Integer getMonth(String date)
+    {
+        return   Integer.parseInt(date.substring(3,5))-1;
+    } private Integer getYear(String date)
+    {
+        return Integer.parseInt(date.substring(6));
+    }
 
 
 

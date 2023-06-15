@@ -81,4 +81,10 @@
             android:text="Date"/>
 
     </RelativeLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="delete"
+        android:layout_marginHorizontal="20sp"
+        android:id="@+id/delete_ok"/>
 </LinearLayout>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10sp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name : "
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:textColor="@color/cardBackGround"
+                android:textStyle="bold"
+                android:textSize="17sp"/>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:id="@+id/name"
+                android:textSize="17sp"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10sp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CNIC : "
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:textColor="@color/cardBackGround"
+                android:textStyle="bold"
+                android:textSize="17sp"/>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:id="@+id/CNIC"
+
+                android:textSize="17sp"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10sp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date : "
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:textColor="@color/cardBackGround"
+                android:textStyle="bold"
+                android:textSize="17sp"/>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:id="@+id/date"
+                android:textSize="17sp"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Leave Approved : "
+                android:textColor="@color/cardBackGround"
+                android:textStyle="bold"
+                android:textSize="17sp"/>
+           <CheckBox
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="Not Aprroved"
+               android:id="@+id/approved"
+               />
+        </LinearLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_margin="15sp"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/cardBackGround"
+            android:drawableRight="@drawable/save"
+            android:id="@+id/save_changes"
+
+            android:text="Save Changes"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_margin="15sp"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/red"
+            android:drawableRight="@drawable/delete"
+            android:id="@+id/deleteEntry"
+            android:text="Delete Entry"/>
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_margin="15sp"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/cardBackGround"
+            android:id="@+id/close"
+            android:text="close"/>
+    </LinearLayout>
+
+</ScrollView>

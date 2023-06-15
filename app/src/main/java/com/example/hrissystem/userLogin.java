@@ -44,7 +44,7 @@ Boolean isAdmin;
         login=findViewById(R.id.login);
         username=findViewById(R.id.username);
         password=findViewById(R.id.password);
-        forgotPassword=findViewById(R.id.forgotPassword);
+
         viewpass=findViewById(R.id.viewpass);
 
         mainActivity=new Intent(this,MainActivity.class);
