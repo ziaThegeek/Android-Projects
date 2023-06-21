@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Smart Stich</string>
+    <string name="app_name">HRMS System</string>
     <string name="CheckinText">checkin</string>
     <string name="CheckoutText">checkout</string>
     <string name="Employee_logcat">Logcat</string>

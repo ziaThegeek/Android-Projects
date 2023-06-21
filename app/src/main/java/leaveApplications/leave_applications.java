@@ -75,7 +75,7 @@ public class leave_applications extends AppCompatActivity {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                leave_application_dialog(name.get(i),cnic.get(i),datePosted.get(i),approved.get(i));
+                leave_application_dialog(name.get(i),cnic.get(i),fromDate.get(i),approved.get(i));
 
 
                 return false;
@@ -86,7 +86,7 @@ public class leave_applications extends AppCompatActivity {
 
     }
 
-    private void leave_application_dialog(String name, String cnic, String datePosted, Boolean approval_status) {
+    private void leave_application_dialog(String name, String cnic, String fromDate, Boolean approval_status) {
 
         TextView nameText,cnicText,datePostedText;
         CheckBox approved_status;
@@ -103,14 +103,14 @@ public class leave_applications extends AppCompatActivity {
 
     nameText.setText(name);
     cnicText.setText(cnic);
-    datePostedText.setText(datePosted);
+    datePostedText.setText(fromDate);
     approved_status.setChecked(approval_status);
     approved_status.setText(approval_status?"Approved":"Not Approved");
     leave_bottom_dialog.show();
     approved_status.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
     @Override
-    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        if (b)
+    public void onCheckedChanged(CompoundButton compoundButton, boolean approved) {
+        if (approved)
         {
             approved_status.setText("Approved");
         }
@@ -122,7 +122,7 @@ public class leave_applications extends AppCompatActivity {
     save_changes.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            updateLeave(cnic,datePosted,approved_status.isChecked());
+            updateLeave(cnic,fromDate,approved_status.isChecked());
 
         }
 
@@ -194,7 +194,7 @@ public class leave_applications extends AppCompatActivity {
 
     }
 
-    private void updateLeave(String cnic, String datePosted, boolean checked) {
+    private void updateLeave(String cnic, String fromDate, boolean checked) {
         //--------------------update leave-------------------//start
 
         Query query=databaseReference.orderByChild("cnic").equalTo(cnic);
@@ -205,7 +205,7 @@ public class leave_applications extends AppCompatActivity {
                                             for (DataSnapshot dsp : snapshot.getChildren()) {
                                                 LeaveApplication application=dsp.getValue(LeaveApplication.class);
                                                 if (cnic.equals(application.getCnic()) &&
-                                                        datePosted.equals(application.getDatePosted())) {
+                                                        fromDate.equals(application.getFromDate())) {
                                                     dsp.getRef().child("approved").setValue(checked);
                                                     break;
 

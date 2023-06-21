@@ -21,7 +21,9 @@
             >
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -29,14 +31,16 @@
                 android:text="Zia Ur Rahman"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@id/leave_status_layout"
                 android:id="@+id/username"
+                android:layout_alignParentLeft="true"
                 />
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_marginEnd="7sp"
+                    android:id="@+id/leave_status_layout"
                     >
                     <TextView
                         android:layout_width="wrap_content"
@@ -45,8 +49,6 @@
                         android:text="Status: "
                         android:textSize="15sp"
                         android:textStyle="bold"
-
-
                         />
                     <TextView
                         android:layout_width="wrap_content"
