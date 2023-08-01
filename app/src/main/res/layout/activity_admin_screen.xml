@@ -48,8 +48,8 @@
                    android:drawableLeft="@drawable/users_white"
                     android:layout_gravity="center"
                     android:gravity="center_vertical|center_horizontal"
-                    android:paddingVertical="20sp"
-                   android:layout_margin="10sp"
+                    android:paddingVertical="10sp"
+                   android:layout_margin="0sp"
                     android:textColor="@color/white"
                     android:textSize="30sp"
                     android:textStyle="bold"/>
@@ -75,8 +75,8 @@
                         android:drawableLeft="@drawable/user_activity"
                         android:layout_gravity="center"
                         android:gravity="center_vertical|center_horizontal"
-                        android:paddingVertical="20sp"
-                        android:layout_margin="10sp"
+                        android:paddingVertical="10sp"
+                        android:layout_margin="0sp"
                         android:textColor="@color/white"
                         android:textSize="30sp"
                         android:textStyle="bold"/>
@@ -102,8 +102,35 @@
                         android:drawableLeft="@drawable/application"
                         android:layout_gravity="center"
                         android:gravity="center_vertical|center_horizontal"
-                        android:paddingVertical="20sp"
-                        android:layout_margin="10sp"
+                        android:paddingVertical="10sp"
+                        android:layout_margin="0sp"
+                        android:textColor="@color/white"
+                        android:textSize="30sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/cardBackGround"
+                app:cardCornerRadius="25sp"
+                android:layout_marginTop="40sp"
+                android:id="@+id/user_queries"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="User Queries"
+                        android:drawableLeft="@drawable/user_question"
+                        android:layout_gravity="center"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:paddingVertical="10sp"
+                        android:layout_margin="0sp"
                         android:textColor="@color/white"
                         android:textSize="30sp"
                         android:textStyle="bold"/>

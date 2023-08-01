@@ -37,7 +37,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,7 +56,7 @@ public class userActivities extends AppCompatActivity {
     ListView listView;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
-    ArrayList<String> checkinTime,checkoutTime,date,name,userKey,CNIC;
+    ArrayList<String> checkinTime, checkoutTime, date, name, userKey, CNIC;
     ArrayList<Double> checkinLongitude;
     ArrayList<Double> checkinLatitude;
     ArrayList<Double> checkoutLatitude;
@@ -73,21 +72,20 @@ public class userActivities extends AppCompatActivity {
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.export_to_excel:
                 export2Excel();
-                return  true;
+                return true;
             case R.id.delete_entries:
-                TextView fromDateText,toDateText;
-                Button   fromDateBtn,toDateBtn,delete_OK;
+                TextView fromDateText, toDateText;
+                Button fromDateBtn, toDateBtn, delete_OK;
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 View dialogView = getLayoutInflater().inflate(R.layout.delete_entries_dialog, null);
-                fromDateText=dialogView.findViewById(R.id.from_date);
-                toDateText=dialogView.findViewById(R.id.to_date);
-                fromDateBtn=dialogView.findViewById(R.id.select_fromDate_btn);
-                toDateBtn=dialogView.findViewById(R.id.select_todate_btn);
-                delete_OK=dialogView.findViewById(R.id.delete_ok);
+                fromDateText = dialogView.findViewById(R.id.from_date);
+                toDateText = dialogView.findViewById(R.id.to_date);
+                fromDateBtn = dialogView.findViewById(R.id.select_fromDate_btn);
+                toDateBtn = dialogView.findViewById(R.id.select_todate_btn);
+                delete_OK = dialogView.findViewById(R.id.delete_ok);
                 fromDateText.setText(getCurrentDate());
                 toDateText.setText(getCurrentDate());
                 fromDateBtn.setOnClickListener(new View.OnClickListener() {
@@ -111,40 +109,29 @@ public class userActivities extends AppCompatActivity {
                 delete_OK.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (!date.contains(fromDateText.getText().toString()))
-                        {
+                        if (!date.contains(fromDateText.getText().toString())) {
                             fromDateText.setError("this date does not exist in database");
-                        }
-                        else if (!date.contains(toDateText.getText().toString()))
-                        {
+                        } else if (!date.contains(toDateText.getText().toString())) {
                             toDateText.setError("this date does not exist in database");
-                        }
-                        else {
-                            int fromIndex=date.indexOf(fromDateText.getText().toString());
-                            int toIndex=date.indexOf(toDateText.getText().toString());
-                            if (fromIndex>toIndex)
-                            {
+                        } else {
+                            int fromIndex = date.indexOf(fromDateText.getText().toString());
+                            int toIndex = date.indexOf(toDateText.getText().toString());
+                            if (fromIndex > toIndex) {
                                 fromDateText.setError("From date should be less than To date");
-                            }
-                            else
-                            {
-                                List<String> dateRange=new ArrayList<>();
-                                for (int i=fromIndex;i<=toIndex;i++)
-                                {
-                                    if (!dateRange.contains(date.get(i)));
+                            } else {
+                                List<String> dateRange = new ArrayList<>();
+                                for (int i = fromIndex; i <= toIndex; i++) {
+                                    if (!dateRange.contains(date.get(i))) ;
                                     dateRange.add(date.get(i));
                                 }
                                 // delete entries
-                                deleteEntries deleteEntries=new deleteEntries(userActivities.this);
+                                deleteEntries deleteEntries = new deleteEntries(userActivities.this);
                                 deleteEntries.execute(dateRange);
                                 dialog.dismiss();
                             }
                         }
                     }
                 });
-
-
-
 
 
                 return true;
@@ -162,14 +149,14 @@ public class userActivities extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
 
-                        textView.setText(String.format(Locale.ENGLISH,"%s%s%s%s%s",String.format(Locale.ENGLISH,"%02d",dayOfMonth) , "-" , String.format(Locale.ENGLISH,"%02d",monthOfYear+1) , "-" , String.format(Locale.ENGLISH,"%04d",year)));
+                        textView.setText(String.format(Locale.ENGLISH, "%s%s%s%s%s", String.format(Locale.ENGLISH, "%02d", dayOfMonth), "-", String.format(Locale.ENGLISH, "%02d", monthOfYear + 1), "-", String.format(Locale.ENGLISH, "%04d", year)));
 
                     }
                 }, getYear(textView.getText().toString().trim()),
                 getMonth(textView.getText().toString().trim()),
                 getDay(textView.getText().toString())
 
-                );
+        );
 
         datePickerDialog.show();
 
@@ -181,19 +168,19 @@ public class userActivities extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_activities);
 
-        listView=findViewById(R.id.listview_users_activity);
-        checkinTime=new ArrayList<>();
-        checkoutTime=new ArrayList<>();
+        listView = findViewById(R.id.listview_users_activity);
+        checkinTime = new ArrayList<>();
+        checkoutTime = new ArrayList<>();
 
-        date=new ArrayList<>();
-        name=new ArrayList<>();
-        CNIC=new ArrayList<>();
-        userKey=new ArrayList<>();
-        checkinLatitude=new ArrayList<>();
-        checkinLongitude=new ArrayList<>();
-        checkoutLatitude=new ArrayList<>();
-        checkoutLongitude=new ArrayList<>();
-        listviewAdapter=new listviewAdapter(this,checkinTime,checkoutTime,date,name);
+        date = new ArrayList<>();
+        name = new ArrayList<>();
+        CNIC = new ArrayList<>();
+        userKey = new ArrayList<>();
+        checkinLatitude = new ArrayList<>();
+        checkinLongitude = new ArrayList<>();
+        checkoutLatitude = new ArrayList<>();
+        checkoutLongitude = new ArrayList<>();
+        listviewAdapter = new listviewAdapter(this, checkinTime, checkoutTime, date, name);
 
 
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -202,8 +189,6 @@ public class userActivities extends AppCompatActivity {
         // below line is used to get reference for our database.
         databaseReference = firebaseDatabase.getReference("userEntry");
         loadDate();
-
-
 
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -216,14 +201,14 @@ public class userActivities extends AppCompatActivity {
                         checkinLongitude.get(i),
                         checkoutLatitude.get(i),
                         checkoutLongitude.get(i)
-                        );
+                );
                 return true;
             }
         });
 
     }
-    public void loadDate()
-    {
+
+    public void loadDate() {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -239,26 +224,24 @@ public class userActivities extends AppCompatActivity {
                 checkinLatitude.clear();
                 checkinLongitude.clear();
                 CNIC.clear();
-                for (DataSnapshot dsp:snapshot.getChildren())
-                {
-                    userEntry newUser=dsp.getValue(userEntry.class);
+                for (DataSnapshot dsp : snapshot.getChildren()) {
+                    userEntry newUser = dsp.getValue(userEntry.class);
 
-                        checkinTime.add(newUser.checkinTime);
-                        checkoutTime.add(newUser.checkOutTime);
-                        date.add(newUser.date);
-                        name.add(newUser.name);
-                        userKey.add(dsp.getKey());
-                        CNIC.add(newUser.getCnic());
-                        checkinLatitude.add(newUser.getCheckinLatitude());
-                        checkinLongitude.add(newUser.getCheckinLongitude());
+                    checkinTime.add(newUser.checkinTime);
+                    checkoutTime.add(newUser.checkOutTime);
+                    date.add(newUser.date);
+                    name.add(newUser.name);
+                    userKey.add(dsp.getKey());
+                    CNIC.add(newUser.getCnic());
+                    checkinLatitude.add(newUser.getCheckinLatitude());
+                    checkinLongitude.add(newUser.getCheckinLongitude());
 
-                        checkoutLatitude.add(newUser.getCheckoutLatitude());
-                        checkoutLongitude.add(newUser.getCheckoutLongitude());
+                    checkoutLatitude.add(newUser.getCheckoutLatitude());
+                    checkoutLongitude.add(newUser.getCheckoutLongitude());
 
 
                 }
                 listView.setAdapter(listviewAdapter);
-
 
 
             }
@@ -270,66 +253,61 @@ public class userActivities extends AppCompatActivity {
         });
     }
 
-    private void showUserActivityDialoge(String name ,String CNIC,String date,
+    private void showUserActivityDialoge(String name, String CNIC, String date,
                                          Double checkinLatitude,
                                          Double checkinlogitude,
                                          Double checkoutLatitude,
                                          Double checkoutlongitude
 
-                                         )
-    {
+    ) {
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
         bottomSheetDialog.setContentView(R.layout.view_user_activity_dialog);
         bottomSheetDialog.show();
-        TextView nameText=bottomSheetDialog.findViewById(R.id.name);
-        TextView CNICText=bottomSheetDialog.findViewById(R.id.CNIC);
-        EditText dateText=bottomSheetDialog.findViewById(R.id.date);
+        TextView nameText = bottomSheetDialog.findViewById(R.id.name);
+        TextView CNICText = bottomSheetDialog.findViewById(R.id.CNIC);
+        EditText dateText = bottomSheetDialog.findViewById(R.id.date);
 
-            nameText.setText(name);
-            CNICText.setText(CNIC);
-            dateText.setText(date);
+        nameText.setText(name);
+        CNICText.setText(CNIC);
+        dateText.setText(date);
 
 
+        Button checkInLocation = bottomSheetDialog.findViewById(R.id.checkin_location);
+        Button checkOutLocation = bottomSheetDialog.findViewById(R.id.checkout_location);
+        Button close = bottomSheetDialog.findViewById(R.id.close);
+        Button updateEntry = bottomSheetDialog.findViewById(R.id.save_changes);
+        Button deleteEntry = bottomSheetDialog.findViewById(R.id.deleteEntry);
 
-        Button checkInLocation=bottomSheetDialog.findViewById(R.id.checkin_location);
-        Button checkOutLocation=bottomSheetDialog.findViewById(R.id.checkout_location);
-        Button close=bottomSheetDialog.findViewById(R.id.close);
-        Button updateEntry=bottomSheetDialog.findViewById(R.id.save_changes);
-        Button deleteEntry=bottomSheetDialog.findViewById(R.id.deleteEntry);
+        dateText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(userActivities.this,
+                        new DatePickerDialog.OnDateSetListener() {
 
-dateText.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View view) {
-        DatePickerDialog datePickerDialog = new DatePickerDialog(userActivities.this,
-                new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
 
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
+                                dateText.setText(String.format("%02d", dayOfMonth) + "-" + String.format("%02d", monthOfYear + 1) + "-" + String.format("%04d", year));
 
-                        dateText.setText(String.format("%02d",dayOfMonth) + "-" + String.format("%02d",monthOfYear+1) + "-" + String.format("%04d",year));
+                            }
+                        }, Integer.parseInt(dateText.getText().toString().substring(6)),
+                        Integer.parseInt(dateText.getText().toString().substring(3, 5)) - 1,
+                        Integer.parseInt(dateText.getText().toString().substring(0, 2)));
 
-                    }
-                }, Integer.parseInt(dateText.getText().toString().substring(6)),
-                Integer.parseInt(dateText.getText().toString().substring(3,5))-1,
-                Integer.parseInt(dateText.getText().toString().substring(0,2)));
-
-        datePickerDialog.show();
-    }
-});
+                datePickerDialog.show();
+            }
+        });
 
         checkInLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //TODO open Map for check in
-                if (checkinLatitude!=0.0 && checkinlogitude!=0.0)
-                {
+                if (checkinLatitude != 0.0 && checkinlogitude != 0.0) {
                     String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%f,%f (%s)", checkinLatitude, checkinlogitude, nameText.getText().toString());
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                     startActivity(intent);
-                }
-                else
-                {
+                } else {
 
                     Toast.makeText(userActivities.this, "Wrong Coordinates", Toast.LENGTH_SHORT).show();
 
@@ -341,14 +319,11 @@ dateText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //TODO open Map for check out
-                if (checkoutLatitude!=0.0 && checkoutlongitude!=0.0)
-                {
+                if (checkoutLatitude != 0.0 && checkoutlongitude != 0.0) {
                     String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%f,%f (%s)", checkoutLatitude, checkoutlongitude, nameText.getText().toString());
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                     startActivity(intent);
-                }
-                else
-                {
+                } else {
                     Toast.makeText(userActivities.this, "Wrong Coordinates", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -362,7 +337,7 @@ dateText.setOnClickListener(new View.OnClickListener() {
         updateEntry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateEntry(CNIC,date,dateText.getText().toString().trim());
+                updateEntry(CNIC, date, dateText.getText().toString().trim());
                 Toast.makeText(userActivities.this, "Updated Successfully", Toast.LENGTH_SHORT).show();
             }
         });
@@ -384,9 +359,9 @@ dateText.setOnClickListener(new View.OnClickListener() {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 //set what would happen when positive button is clicked
                                 //TODO Delete User
-                                deleteEntry(CNIC,date);
+                                deleteEntry(CNIC, date);
                                 bottomSheetDialog.dismiss();
-                                Toast.makeText(userActivities.this,"Entry Deleted",Toast.LENGTH_LONG).show();
+                                Toast.makeText(userActivities.this, "Entry Deleted", Toast.LENGTH_LONG).show();
                             }
                         })
 //set negative button
@@ -403,8 +378,9 @@ dateText.setOnClickListener(new View.OnClickListener() {
             }
         });
     }
+
     private void export2Excel() {
-        String permission= Manifest.permission.WRITE_EXTERNAL_STORAGE;
+        String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
         if (ContextCompat.checkSelfPermission(userActivities.this, permission)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -424,9 +400,9 @@ dateText.setOnClickListener(new View.OnClickListener() {
             }
         } else {
             File sd = Environment.getExternalStorageDirectory();
-            String csvFile = "User Activity "+new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date())+".xls";
+            String csvFile = "User Activity " + new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date()) + ".xls";
 
-            File directory = new File(sd.getAbsolutePath()+"/HRIS System");
+            File directory = new File(sd.getAbsolutePath() + "/HRIS System");
 
             //create directory if not exist
             if (!directory.isDirectory()) {
@@ -453,27 +429,23 @@ dateText.setOnClickListener(new View.OnClickListener() {
                     sheetA.addCell(new Label(4, 0, "Checkout Time"));
                     sheetA.addCell(new Label(5, 0, "Date"));
 
-                    for(int rows=1;rows<=name.size();rows++)
-                    {
+                    for (int rows = 1; rows <= name.size(); rows++) {
                         // column and row titles
-                        sheetA.addCell(new Label(0, rows, rows+""));
-                        sheetA.addCell(new Label(1, rows, name.get(rows-1)));
-                        sheetA.addCell(new Label(2, rows, CNIC.get(rows-1)));
-                        sheetA.addCell(new Label(3, rows, checkinTime.get(rows-1)));
-                        sheetA.addCell(new Label(4, rows, checkoutTime.get(rows-1)));
-                        sheetA.addCell(new Label(5, rows, date.get(rows-1)));
+                        sheetA.addCell(new Label(0, rows, rows + ""));
+                        sheetA.addCell(new Label(1, rows, name.get(rows - 1)));
+                        sheetA.addCell(new Label(2, rows, CNIC.get(rows - 1)));
+                        sheetA.addCell(new Label(3, rows, checkinTime.get(rows - 1)));
+                        sheetA.addCell(new Label(4, rows, checkoutTime.get(rows - 1)));
+                        sheetA.addCell(new Label(5, rows, date.get(rows - 1)));
                     }
 
                 }
 
 
-
-
                 // close workbook
                 workbook.write();
                 workbook.close();
-                Toast.makeText(this, "File Saved in "+directory, Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(this, "File Saved in " + directory, Toast.LENGTH_SHORT).show();
 
 
             } catch (Exception e) {
@@ -482,16 +454,16 @@ dateText.setOnClickListener(new View.OnClickListener() {
         }
 
     }
-    public void updateEntry(String CNIC,String date,String newDate)
-    {
-        Query query=databaseReference.orderByChild("cnic").equalTo(CNIC);
+
+    public void updateEntry(String CNIC, String date, String newDate) {
+        Query query = databaseReference.orderByChild("cnic").equalTo(CNIC);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dsp : snapshot.getChildren()) {
-                userEntry userEntry=dsp.getValue(userEntry.class);
-                if (CNIC.equals(userEntry.getCnic()) && date.equals(userEntry.getDate()))
-                    dsp.getRef().child("date").setValue(newDate);
+                    userEntry userEntry = dsp.getValue(userEntry.class);
+                    if (CNIC.equals(userEntry.getCnic()) && date.equals(userEntry.getDate()))
+                        dsp.getRef().child("date").setValue(newDate);
                 }
             }
 
@@ -501,14 +473,14 @@ dateText.setOnClickListener(new View.OnClickListener() {
             }
         });
     }
-    public void deleteEntry(String CNIC,String date)
-    {
-        Query query=databaseReference.orderByChild("cnic").equalTo(CNIC);
+
+    public void deleteEntry(String CNIC, String date) {
+        Query query = databaseReference.orderByChild("cnic").equalTo(CNIC);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dsp : snapshot.getChildren()) {
-                    userEntry userEntry=dsp.getValue(com.example.hrissystem.userEntry.class);
+                    userEntry userEntry = dsp.getValue(com.example.hrissystem.userEntry.class);
                     if (CNIC.equals(userEntry.getCnic()) && date.equals(userEntry.getDate()))
                         dsp.getRef().removeValue(new DatabaseReference.CompletionListener() {
                             @Override
@@ -531,25 +503,27 @@ dateText.setOnClickListener(new View.OnClickListener() {
             }
         });
     }
+
     public String getCurrentDate() {
 
 
         String currentDate;
-        currentDate= new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new java.util.Date());
+        currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new java.util.Date());
         return currentDate;
     }
-    private Integer getDay(String date)
-    {
-        return Integer.parseInt(date.substring(0,2));
-    }
-    private Integer getMonth(String date)
-    {
-      return   Integer.parseInt(date.substring(3,5))-1;
-    } private Integer getYear(String date)
-    {
-       return Integer.parseInt(date.substring(6));
+
+    private Integer getDay(String date) {
+        return Integer.parseInt(date.substring(0, 2));
     }
 
+    private Integer getMonth(String date) {
+        return Integer.parseInt(date.substring(3, 5)) - 1;
     }
+
+    private Integer getYear(String date) {
+        return Integer.parseInt(date.substring(6));
+    }
+
+}
 
 

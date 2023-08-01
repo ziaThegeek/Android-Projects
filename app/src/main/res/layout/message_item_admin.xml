@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10sp"
+        android:orientation="vertical"
+        android:layout_marginLeft="16sp">
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+
+        android:background="@drawable/round_background_border_admin">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/profile_picture"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/round_background_admin"
+                android:textSize="30sp"
+                android:text="A"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:contentDescription="@string/app_name" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/sender_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Admin"
+                        android:layout_alignParentLeft="true"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        >
+
+                        <TextView
+                            android:id="@+id/more"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:drawableLeft="@drawable/more_white"
+                            android:layout_gravity="top"
+
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+                <TextView
+                    android:id="@+id/message_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="How are you?"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:layout_marginTop="4sp"
+                    >
+                <TextView
+                    android:id="@+id/message_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="04-03-2023"
+                    android:gravity="end"
+                    android:paddingHorizontal="8sp"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/message_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10:30 AM"
+                    android:gravity="end"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/reply_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/reply_round_background_border"
+        android:layout_marginTop="-8dp"
+        android:layout_gravity="start"
+        android:layout_marginLeft="14sp"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="3sp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/cardBackGround"
+                android:text="Zia Ur Rahman"
+                android:id="@+id/reply_name"
+                />
+            <TextView
+                android:id="@+id/reply_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="My Name Is Zia Ur Rahman"
+                android:textColor="@color/cardBackGround"
+                android:layout_margin="8dp"/>
+        </LinearLayout>
+    </RelativeLayout>
+    </LinearLayout>
+</ScrollView>

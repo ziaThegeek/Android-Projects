@@ -53,27 +53,28 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import leaveApplications.LeaveApplication;
+import userQueries.UserQueries;
 
 public class MainActivity extends AppCompatActivity {
-String currentTime;
-String currentDate;
-String username,cnic,CNIC;
-Intent loginData;
+    String currentTime;
+    String currentDate;
+    String username, cnic, CNIC;
+    Intent loginData;
 
-Location lastLocation;
-Button   checkinBtn,checkoutBtn;
-TextView currentTimeText,currentDateText,usernameText;
+    Location lastLocation;
+    Button checkinBtn, checkoutBtn;
+    TextView currentTimeText, currentDateText, usernameText;
 
-FusedLocationProviderClient mFusedLocationClient;
-int PERMISSION_ID = 44;
-FirebaseDatabase firebaseDatabase;
-DatabaseReference databaseReference;
-ArrayList<String> checkinTime,checkoutTime,date,name,userKey;
-listviewAdapter listviewAdapter;
-ListView listView;
+    FusedLocationProviderClient mFusedLocationClient;
+    int PERMISSION_ID = 44;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
+    ArrayList<String> checkinTime, checkoutTime, date, name, userKey;
+    listviewAdapter listviewAdapter;
+    ListView listView;
     ArrayAdapter<CharSequence> leave_types;
-DrawerLayout drawerLayout;
-ActionBarDrawerToggle actionBarDrawerToggle;
+    DrawerLayout drawerLayout;
+    ActionBarDrawerToggle actionBarDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,27 +85,26 @@ ActionBarDrawerToggle actionBarDrawerToggle;
         checkoutBtn = findViewById(R.id.checkoutBtn);
         currentTimeText = findViewById(R.id.current_time);
         currentDateText = findViewById(R.id.current_date);
-        usernameText=findViewById(R.id.username);
-        listView=findViewById(R.id.listview);
-
+        usernameText = findViewById(R.id.username);
+        listView = findViewById(R.id.listview);
 
 
         //-----------------------------------------//
         currentDate = getCurrentDate();
         currentTime = getCurrentTime();
-        checkinTime=new ArrayList<>();
-        checkoutTime=new ArrayList<>();
-        date=new ArrayList<>();
-        name=new ArrayList<>();
-        userKey=new ArrayList<>();
-        listviewAdapter=new listviewAdapter(this,checkinTime,checkoutTime,date);
+        checkinTime = new ArrayList<>();
+        checkoutTime = new ArrayList<>();
+        date = new ArrayList<>();
+        name = new ArrayList<>();
+        userKey = new ArrayList<>();
+        listviewAdapter = new listviewAdapter(this, checkinTime, checkoutTime, date);
 
         leave_types = ArrayAdapter.createFromResource(this,
                 R.array.leave_types, android.R.layout.simple_spinner_item);
         leave_types.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        loginData=getIntent();
-        username=loginData.getStringExtra("username");
-        cnic=loginData.getStringExtra("cnic");
+        loginData = getIntent();
+        username = loginData.getStringExtra("username");
+        cnic = loginData.getStringExtra("cnic");
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         firebaseDatabase = FirebaseDatabase.getInstance();
 
@@ -128,26 +128,22 @@ ActionBarDrawerToggle actionBarDrawerToggle;
             public void onClick(View view) {
                 getLastLocation();
 
-                    if (!date.isEmpty() && date.get(date.size()-1).equals(getCurrentDate()))
-                    {
-                        Toast.makeText(MainActivity.this, "Already CheckedIn today  ", Toast.LENGTH_SHORT).show();
-                    }
-                else if (lastLocation != null) {
-                    userEntry userEntry=new userEntry(
+                if (!date.isEmpty() && date.get(date.size() - 1).equals(getCurrentDate())) {
+                    Toast.makeText(MainActivity.this, "Already CheckedIn today  ", Toast.LENGTH_SHORT).show();
+                } else if (lastLocation != null) {
+                    userEntry userEntry = new userEntry(
                             username,
                             getCurrentDate(),
                             getCurrentTime(),
                             "00:00:00",
-                             lastLocation.getLatitude(),
+                            lastLocation.getLatitude(),
                             lastLocation.getLongitude(),
                             0.0,
                             0.0,
                             cnic);
                     databaseReference.push().setValue(userEntry);
                     Toast.makeText(MainActivity.this, "CheckIn successful", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
+                } else {
 
                 }
             }
@@ -156,15 +152,13 @@ ActionBarDrawerToggle actionBarDrawerToggle;
             @Override
             public void onClick(View view) {
                 getLastLocation();
-                if (!checkoutTime.isEmpty() && !checkoutTime.get(checkoutTime.size()-1).equals("00:00:00"))
-                {
+                if (!checkoutTime.isEmpty() && !checkoutTime.get(checkoutTime.size() - 1).equals("00:00:00")) {
                     Toast.makeText(MainActivity.this, "Already Checked Out", Toast.LENGTH_SHORT).show();
-                }
-               else if (lastLocation != null) {
+                } else if (lastLocation != null) {
 
-                    databaseReference.child(userKey.get(userKey.size()-1)).child("checkOutTime").setValue(getCurrentTime());
-                    databaseReference.child(userKey.get(userKey.size()-1)).child("checkoutLatitude").setValue(lastLocation.getLatitude());
-                    databaseReference.child(userKey.get(userKey.size()-1)).child("checkoutLongitude").setValue(lastLocation.getLongitude());
+                    databaseReference.child(userKey.get(userKey.size() - 1)).child("checkOutTime").setValue(getCurrentTime());
+                    databaseReference.child(userKey.get(userKey.size() - 1)).child("checkoutLatitude").setValue(lastLocation.getLatitude());
+                    databaseReference.child(userKey.get(userKey.size() - 1)).child("checkoutLongitude").setValue(lastLocation.getLongitude());
                     Toast.makeText(MainActivity.this, "checkout successful", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -180,18 +174,22 @@ ActionBarDrawerToggle actionBarDrawerToggle;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.user_actions_menu,menu);
+        getMenuInflater().inflate(R.menu.user_actions_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.leave_apply:
                 showLeaveApplicationDialog();
-
                 return true;
+            case R.id.user_msgs:
+                Intent msg_activity = new Intent(MainActivity.this, UserQueries.class);
+                msg_activity.putExtra("cnic", cnic);
+                msg_activity.putExtra("username", username);
+
+                startActivity(msg_activity);
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -199,17 +197,17 @@ ActionBarDrawerToggle actionBarDrawerToggle;
     }
 
     private void showLeaveApplicationDialog() {
-        EditText fromDateText,toDateText,reasonText;
+        EditText fromDateText, toDateText, reasonText;
         Spinner leave_type;
         Button apply_leave;
-        AlertDialog.Builder customDialog=new AlertDialog.Builder(this);
-        View dialogView=getLayoutInflater().inflate(R.layout.leave_appliction_dialog,null);
+        AlertDialog.Builder customDialog = new AlertDialog.Builder(this);
+        View dialogView = getLayoutInflater().inflate(R.layout.leave_appliction_dialog, null);
         //--------------------------------------------------//
-        fromDateText=dialogView.findViewById(R.id.from_date);
-        toDateText=dialogView.findViewById(R.id.to_date);
-        reasonText=dialogView.findViewById(R.id.reason);
-        apply_leave=dialogView.findViewById(R.id.apply_leave);
-        leave_type=dialogView.findViewById(R.id.leave_type);
+        fromDateText = dialogView.findViewById(R.id.from_date);
+        toDateText = dialogView.findViewById(R.id.to_date);
+        reasonText = dialogView.findViewById(R.id.reason);
+        apply_leave = dialogView.findViewById(R.id.apply_leave);
+        leave_type = dialogView.findViewById(R.id.leave_type);
         //-----------------------------------------------------//
 
         //----------------------------------------------------//
@@ -222,35 +220,25 @@ ActionBarDrawerToggle actionBarDrawerToggle;
         customDialog.setTitle("Leave Application");
 
 
-
         AlertDialog dialog = customDialog.create();
         dialog.show();
         apply_leave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (reasonText.getText().toString().trim().isEmpty())
-                {
+                if (reasonText.getText().toString().trim().isEmpty()) {
                     Toast.makeText(MainActivity.this, "Reason Is Required", Toast.LENGTH_SHORT).show();
-                }
-                else if (fromDateText.getText().toString().trim().isEmpty())
-                {
+                } else if (fromDateText.getText().toString().trim().isEmpty()) {
                     Toast.makeText(MainActivity.this, "Reason Is Required", Toast.LENGTH_SHORT).show();
-                }
-                else if (toDateText.getText().toString().trim().isEmpty())
-                {
+                } else if (toDateText.getText().toString().trim().isEmpty()) {
                     Toast.makeText(MainActivity.this, "Reason Is Required", Toast.LENGTH_SHORT).show();
-                }
-                else if (leave_type.getSelectedItemPosition()==0) {
+                } else if (leave_type.getSelectedItemPosition() == 0) {
                     Toast.makeText(MainActivity.this, "Leave Type Is Required", Toast.LENGTH_SHORT).show();
 
 
-                }
-                else
-                {
-                    applyApplication(username,cnic,fromDateText.getText().toString(),toDateText.getText().toString(),leave_type.getSelectedItem().toString(),reasonText.getText().toString());
+                } else {
+                    applyApplication(username, cnic, fromDateText.getText().toString(), toDateText.getText().toString(), leave_type.getSelectedItem().toString(), reasonText.getText().toString());
                     dialog.dismiss();
                     Toast.makeText(MainActivity.this, "Leave Applied", Toast.LENGTH_SHORT).show();
-
 
 
                 }
@@ -271,15 +259,11 @@ ActionBarDrawerToggle actionBarDrawerToggle;
             }
         });
 
-
-
-
-
     }
 
-    private void applyApplication(String name,String cnic,String fromDate,String toDate,String leave_type,String reson) {
-        DatabaseReference applicationReference=FirebaseDatabase.getInstance().getReference("leaves");
-        LeaveApplication application=new LeaveApplication(name,cnic,fromDate,toDate,leave_type,reson,getCurrentDate());
+    private void applyApplication(String name, String cnic, String fromDate, String toDate, String leave_type, String reson) {
+        DatabaseReference applicationReference = FirebaseDatabase.getInstance().getReference("leaves");
+        LeaveApplication application = new LeaveApplication(name, cnic, fromDate, toDate, leave_type, reson, getCurrentDate());
         applicationReference.push().setValue(application);
     }
 
@@ -317,7 +301,7 @@ ActionBarDrawerToggle actionBarDrawerToggle;
                         if (location == null) {
                             requestNewLocationData();
                         } else {
-                            lastLocation=location;
+                            lastLocation = location;
 
                         }
                     }
@@ -334,6 +318,7 @@ ActionBarDrawerToggle actionBarDrawerToggle;
         }
 
     }
+
     @SuppressLint("MissingPermission")
     private void requestNewLocationData() {
 
@@ -350,6 +335,7 @@ ActionBarDrawerToggle actionBarDrawerToggle;
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
     }
+
     private LocationCallback mLocationCallback = new LocationCallback() {
 
         @Override
@@ -358,6 +344,7 @@ ActionBarDrawerToggle actionBarDrawerToggle;
 
         }
     };
+
     private boolean checkPermissions() {
         return ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
 
@@ -366,6 +353,7 @@ ActionBarDrawerToggle actionBarDrawerToggle;
         // use:
         // ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED
     }
+
     // method to request for permissions
     private void requestPermissions() {
         ActivityCompat.requestPermissions(this, new String[]{
@@ -393,43 +381,39 @@ ActionBarDrawerToggle actionBarDrawerToggle;
         }
     }
 
-public void loadDate()
-{
-    CNIC="";
-    databaseReference.addValueEventListener(new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot snapshot) {
+    public void loadDate() {
+        CNIC = "";
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
 
-            checkinTime.clear();
-            checkoutTime.clear();
-            date.clear();
-            name.clear();
-            userKey.clear();
-            for (DataSnapshot dsp:snapshot.getChildren())
-            {
-                userEntry newUser=dsp.getValue(userEntry.class);
-                CNIC= newUser.getCnic();
-                if (CNIC.equals(cnic)) {
-                    checkinTime.add(newUser.checkinTime);
-                    checkoutTime.add(newUser.checkOutTime);
-                    date.add(newUser.date);
-
-                    userKey.add(dsp.getKey());
+                checkinTime.clear();
+                checkoutTime.clear();
+                date.clear();
+                name.clear();
+                userKey.clear();
+                for (DataSnapshot dsp : snapshot.getChildren()) {
+                    userEntry newUser = dsp.getValue(userEntry.class);
+                    CNIC = newUser.getCnic();
+                    if (CNIC.equals(cnic)) {
+                        checkinTime.add(newUser.checkinTime);
+                        checkoutTime.add(newUser.checkOutTime);
+                        date.add(newUser.date);
+                        userKey.add(dsp.getKey());
+                    }
                 }
+                listView.setAdapter(listviewAdapter);
+
+
             }
-            listView.setAdapter(listviewAdapter);
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError error) {
-
-        }
-    });
-}
+            }
+        });
+    }
 
 
     private void setDateFromDialog(TextView textView) {
@@ -440,7 +424,7 @@ public void loadDate()
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
 
-                        textView.setText(String.format(Locale.ENGLISH,"%s%s%s%s%s",String.format(Locale.ENGLISH,"%02d",dayOfMonth) , "-" , String.format(Locale.ENGLISH,"%02d",monthOfYear+1) , "-" , String.format(Locale.ENGLISH,"%04d",year)));
+                        textView.setText(String.format(Locale.ENGLISH, "%s%s%s%s%s", String.format(Locale.ENGLISH, "%02d", dayOfMonth), "-", String.format(Locale.ENGLISH, "%02d", monthOfYear + 1), "-", String.format(Locale.ENGLISH, "%04d", year)));
 
                     }
                 }, getYear(textView.getText().toString().trim()),
@@ -453,18 +437,17 @@ public void loadDate()
 
     }
 
-    private Integer getDay(String date)
-    {
-        return Integer.parseInt(date.substring(0,2));
-    }
-    private Integer getMonth(String date)
-    {
-        return   Integer.parseInt(date.substring(3,5))-1;
-    } private Integer getYear(String date)
-    {
-        return Integer.parseInt(date.substring(6));
+    private Integer getDay(String date) {
+        return Integer.parseInt(date.substring(0, 2));
     }
 
+    private Integer getMonth(String date) {
+        return Integer.parseInt(date.substring(3, 5)) - 1;
+    }
+
+    private Integer getYear(String date) {
+        return Integer.parseInt(date.substring(6));
+    }
 
 
 }

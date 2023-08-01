@@ -3,4 +3,7 @@
     <item
         android:id="@+id/leave_apply"
         android:title="Leave Application"/>
+    <item
+        android:id="@+id/user_msgs"
+        android:title="Queries"/>
 </menu>

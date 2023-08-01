@@ -21,5 +21,7 @@
         <item>Approved</item>
     </string-array>
 
+    <string name="userQueries">UserQueries</string>
+
 
 </resources>

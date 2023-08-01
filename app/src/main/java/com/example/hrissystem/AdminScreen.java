@@ -5,12 +5,13 @@ import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
-import leaveApplications.LeaveApplication;
+
+
+import userQueries.UserQueries;
 
 public class AdminScreen extends AppCompatActivity {
-CardView users,userActivity,leaveApplications;
+CardView users,userActivity,leaveApplications,user_queries;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,27 +19,23 @@ CardView users,userActivity,leaveApplications;
         users=findViewById(R.id.users);
         userActivity=findViewById(R.id.user_activity);
         leaveApplications=findViewById(R.id.leaves);
-        users.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent users=new Intent(AdminScreen.this , Users.class);
-                startActivity(users);
+        user_queries=findViewById(R.id.user_queries);
+        users.setOnClickListener(view -> {
+            Intent users=new Intent(AdminScreen.this , Users.class);
+            startActivity(users);
 
-            }
         });
-        userActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent users=new Intent(AdminScreen.this , userActivities.class);
-                startActivity(users);
-            }
+        userActivity.setOnClickListener(view -> {
+            Intent users=new Intent(AdminScreen.this , userActivities.class);
+            startActivity(users);
         });
-        leaveApplications.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent leaves=new Intent(AdminScreen.this , leaveApplications.leave_applications.class);
-                startActivity(leaves);
-            }
+        leaveApplications.setOnClickListener(view -> {
+            Intent leaves=new Intent(AdminScreen.this , leaveApplications.leave_applications.class);
+            startActivity(leaves);
+        });
+        user_queries.setOnClickListener(view -> {
+            Intent queries=new Intent(AdminScreen.this , UserQueries.class);
+            startActivity(queries);
         });
 
     }

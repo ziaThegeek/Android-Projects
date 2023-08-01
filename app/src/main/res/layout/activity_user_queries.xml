@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="userQueries.UserQueries">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_background_messaging"
+        android:text="New Message"
+        android:textColor="@color/cardBackGround"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:paddingVertical="15sp"
+        android:layout_gravity="center"
+      android:layout_margin="10sp"
+        android:gravity="center"
+        android:id="@+id/newMessage"
+
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recycler_view"
+      android:layout_marginTop="20sp"
+        />
+</LinearLayout>
