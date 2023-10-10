@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Dynamics 365</string>
+    <string name="SplashTextMain">Finance and Operations</string>
+    <string name="SplashTextTitle">Kharcha Manager</string>
+    <string name="version">Version</string>
+    <string name="ver_no">36</string>
+    <string name="SO">Sales Orders</string>
+    <string name="PO">Purchase Orders</string>
+    <string name="TO">Transfer Orders</string>
+</resources>

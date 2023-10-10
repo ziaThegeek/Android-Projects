@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_left">8dp</dimen>
+    <dimen name="margin_right">16dp</dimen>
+    <dimen name="margin_bottom">12sp</dimen>
+    <dimen name="width_progress_bar">150sp</dimen>
+    <dimen name="hight_progress_bar">25sp</dimen>
+    <!-- Add more dimension values as needed -->
+</resources>

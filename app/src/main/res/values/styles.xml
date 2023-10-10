@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="splashToTextStyle">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@color/textColorBlack</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+    <style name="heading5">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/textColorBlack</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">bottom</item>
+        <item name="android:padding">3sp</item>
+
+
+    </style>
+    <style name="paragraph">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">@color/textColorBlack</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:gravity">bottom</item>
+        <item name="android:padding">4sp</item>
+
+
+    </style>
+</resources>
